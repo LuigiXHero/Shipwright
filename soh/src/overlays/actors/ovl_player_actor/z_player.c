@@ -8797,14 +8797,19 @@ void func_80844AF4(Player* this, PlayState* play) {
         }
     }
 }
-
+//Spin attack stuff
 s32 func_80844BE4(Player* this, PlayState* play) {
     s32 temp;
+
+    u16 buttonsToCheck = BTN_A | BTN_B | BTN_CLEFT | BTN_CRIGHT | BTN_CDOWN;
+    if (CVarGetInteger("gDpadEquips", 0) != 0) {
+        buttonsToCheck |= BTN_DUP | BTN_DDOWN | BTN_DLEFT | BTN_DRIGHT;
+    }
 
     if (func_8083ADD4(play, this)) {
         this->stateFlags2 |= PLAYER_STATE2_SPIN_ATTACKING;
     } else {
-        if (!CHECK_BTN_ALL(sControlInput->cur.button, BTN_B)) {
+        if (!CHECK_BTN_ANY(sControlInput->cur.button, buttonsToCheck)) {
             if ((this->unk_858 >= 0.85f) || func_808375D8(this)) {
                 temp = D_80854384[Player_HoldsTwoHandedWeapon(this)];
             } else {
