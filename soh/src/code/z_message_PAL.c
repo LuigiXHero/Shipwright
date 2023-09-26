@@ -1114,6 +1114,11 @@ void Message_DrawText(PlayState* play, Gfx** gfxP) {
         }
     }
     if (msgCtx->textDelayTimer == 0) {
+        //Textbox sound
+
+        if (!Audio_IsSfxPlaying(NA_SE_VO_KZ_MOVE)) {
+            Audio_PlaySoundGeneral(NA_SE_VO_KZ_MOVE, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
+        }
         msgCtx->textDrawPos = i + CVarGetInteger("gTextSpeed", 2);
         msgCtx->textDelayTimer = msgCtx->textDelay;
     } else {
