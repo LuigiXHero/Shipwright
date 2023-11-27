@@ -754,7 +754,7 @@ void LocationTable_Init() {
     /*-------------------------------
             --- CUTSCENES ---
       -------------------------------*/
-
+    locationTable[TOT_MASTER_SWORD]                              = ItemLocation::Delayed(RC_TOT_MASTER_SWORD,                   0xFF, "ToT Master Sword",                               TOT_MASTER_SWORD,            MASTER_SWORD,              {}, SpoilerCollectionCheck::MasterSword(),     SpoilerCollectionCheckGroup::GROUP_HYRULE_CASTLE);
     locationTable[TOT_LIGHT_ARROWS_CUTSCENE]                     = ItemLocation::Delayed(RC_TOT_LIGHT_ARROWS_CUTSCENE,          0xFF, "ToT Light Arrow Cutscene",                       TOT_LIGHT_ARROWS_CUTSCENE,   LIGHT_ARROWS,              {}, SpoilerCollectionCheck::Chest(0x43, 0x1E), SpoilerCollectionCheckGroup::GROUP_HYRULE_CASTLE);
     locationTable[LW_GIFT_FROM_SARIA]                            = ItemLocation::Delayed(RC_LW_GIFT_FROM_SARIA,                 0xFF, "LW Gift From Saria",                             LW_GIFT_FROM_SARIA,          PROGRESSIVE_OCARINA,       {}, SpoilerCollectionCheck::EventChkInf(0xC1), SpoilerCollectionCheckGroup::GROUP_LOST_WOODS);
     locationTable[ZF_GREAT_FAIRY_REWARD]                         = ItemLocation::Delayed(RC_ZF_GREAT_FAIRY_REWARD,              0xFF, "ZF Great Fairy Reward",                          ZF_GREAT_FAIRY_REWARD,       FARORES_WIND,              {}, SpoilerCollectionCheck::Chest(0x3D, 0x01), SpoilerCollectionCheckGroup::GROUP_ZORAS_DOMAIN);
@@ -918,6 +918,7 @@ void LocationTable_Init() {
     locationTable[DMC_UPPER_GROTTO_GOSSIP_STONE]         = ItemLocation::HintStone(RC_DMC_UPPER_GROTTO_GOSSIP_STONE,   "DMC Upper Grotto Gossip Stone");
 
     locationTable[GANONDORF_HINT]                        = ItemLocation::OtherHint(RC_GANONDORF_HINT,                  "Ganondorf Hint");
+    locationTable[TRIFORCE_COMPLETED]                    = ItemLocation::Reward (RC_TRIFORCE_COMPLETED, 0xFF, "Completed Triforce", NONE, TRIFORCE_COMPLETED, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_NO_GROUP);
 
     for (int i = NONE; i != KEY_ENUM_MAX; i++)
         locationLookupTable.insert(std::make_pair(locationTable[i].GetRandomizerCheck(), static_cast<Key>(i)));
@@ -1264,6 +1265,7 @@ std::vector<uint32_t> overworldLocations = {
   OGC_GREAT_FAIRY_REWARD,
 
   //Temple of Time
+  TOT_MASTER_SWORD,
   SHEIK_AT_TEMPLE,
   TOT_LIGHT_ARROWS_CUTSCENE,
 
@@ -1523,6 +1525,9 @@ void GenerateLocationPool() {
 
   allLocations.clear();
   AddLocation(LINKS_POCKET);
+  if (Settings::TriforceHunt.Is(TRIFORCE_HUNT_ON)) {
+    AddLocation(TRIFORCE_COMPLETED);
+  }
   AddLocations(overworldLocations);
 
   for (auto dungeon : Dungeon::dungeonList) {

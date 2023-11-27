@@ -466,7 +466,7 @@ void func_80B14B6C(EnTa* this, PlayState* play) {
         func_80B13AA0(this, func_80B14AF4, func_80B167C0);
         this->unk_2CC = 5;
         Flags_SetEventChkInf(EVENTCHKINF_TALON_RETURNED_FROM_CASTLE);
-        if (gSaveContext.n64ddFlag) {
+        if (IS_RANDO) {
             OnePointCutscene_EndCutscene(play, csCamIdx);
         }
         Animation_PlayOnce(&this->skelAnime, &gTalonRunTransitionAnim);
@@ -669,17 +669,17 @@ void func_80B15424(EnTa* this, PlayState* play) {
     func_80B15308(this);
 
     if ((Message_GetState(&play->msgCtx) == TEXT_STATE_EVENT) && Message_ShouldAdvance(play)) {
-        play->nextEntranceIndex = 0x5E4;
+        play->nextEntranceIndex = ENTR_LON_LON_BUILDINGS_2;
 
         if (gSaveContext.eventInf[0] & 0x100) {
-            play->fadeTransition = 46;
-            gSaveContext.nextTransitionType = 3;
+            play->transitionType = TRANS_TYPE_CIRCLE(TCA_STARBURST, TCC_WHITE, TCS_FAST);
+            gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE;
         } else {
-            play->fadeTransition = 38;
-            gSaveContext.nextTransitionType = 2;
+            play->transitionType = TRANS_TYPE_CIRCLE(TCA_STARBURST, TCC_BLACK, TCS_FAST);
+            gSaveContext.nextTransitionType = TRANS_TYPE_FADE_BLACK;
         }
 
-        play->sceneLoadFlag = 0x14;
+        play->transitionTrigger = TRANS_TRIGGER_START;
         gSaveContext.eventInf[0] |= 0x400;
         this->actionFunc = func_80B153D4;
         this->unk_2CC = 22;
@@ -878,7 +878,7 @@ void func_80B15E80(EnTa* this, PlayState* play) {
     } else if (this->unk_2E0 & 2) {
         func_8002F434(&this->actor, play, GI_MILK, 10000.0f, 50.0f);
     } else {
-        if (!gSaveContext.n64ddFlag) {
+        if (!IS_RANDO) {
             func_8002F434(&this->actor, play, GI_MILK_BOTTLE, 10000.0f, 50.0f);
         } else {
             GetItemEntry getItemEntry = Randomizer_GetItemFromKnownCheck(RC_LLR_TALONS_CHICKENS, GI_MILK_BOTTLE);
@@ -893,7 +893,7 @@ void func_80B15F54(EnTa* this, PlayState* play) {
         Message_CloseTextbox(play);
         this->unk_2E0 &= ~0x2;
         func_80B13AA0(this, func_80B15E80, func_80B16938);
-        if (!gSaveContext.n64ddFlag) {
+        if (!IS_RANDO) {
             func_8002F434(&this->actor, play, GI_MILK_BOTTLE, 10000.0f, 50.0f);
         } else {
             GetItemEntry getItemEntry = Randomizer_GetItemFromKnownCheck(RC_LLR_TALONS_CHICKENS, GI_MILK_BOTTLE);
@@ -1236,8 +1236,7 @@ void EnTa_Draw(Actor* thisx, PlayState* play) {
     gSPSegment(POLY_OPA_DISP++, 0x8, SEGMENTED_TO_VIRTUAL(eyeTextures[this->eyeIndex]));
     gSPSegment(POLY_OPA_DISP++, 0x9, SEGMENTED_TO_VIRTUAL(gTalonHeadSkinTex));
 
-    SkelAnime_DrawFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount,
-                          EnTa_OverrideLimbDraw, EnTa_PostLimbDraw, this);
+    SkelAnime_DrawSkeletonOpa(play, &this->skelAnime, EnTa_OverrideLimbDraw, EnTa_PostLimbDraw, this);
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

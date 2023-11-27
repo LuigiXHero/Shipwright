@@ -88,6 +88,7 @@ Gfx gKeyTreasureChestChestFrontDL[128] = {0};
 Gfx gChristmasRedTreasureChestChestFrontDL[128] = {0};
 Gfx gChristmasGreenTreasureChestChestFrontDL[128] = {0};
 u8 hasCreatedRandoChestTextures = 0;
+u8 hasCustomChestDLs = 0;
 u8 hasChristmasChestTexturesAvailable = 0;
 
 void EnBox_SetupAction(EnBox* this, EnBoxActionFunc actionFunc) {
@@ -192,7 +193,7 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
     SkelAnime_Init(play, &this->skelanime, &gTreasureChestSkel, anim, this->jointTable, this->morphTable, 5);
     Animation_Change(&this->skelanime, anim, 1.5f, animFrameStart, endFrame, ANIMMODE_ONCE, 0.0f);
 
-    if (gSaveContext.n64ddFlag) {
+    if (IS_RANDO) {
         this->getItemEntry = Randomizer_GetItemFromActor(this->dyna.actor.id, play->sceneNum, this->dyna.actor.params, this->dyna.actor.params >> 5 & 0x7F);
     } else {
         this->getItemEntry = ItemTable_RetrieveEntry(MOD_NONE, this->dyna.actor.params >> 5 & 0x7F);
@@ -206,7 +207,7 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
     }
 
     // Delete chests in Boss Rush. Mainly for the chest in King Dodongo's boss room.
-    if (gSaveContext.isBossRush) {
+    if (IS_BOSS_RUSH) {
         EnBox_SetupAction(this, EnBox_Destroy);
     }
 }
@@ -448,7 +449,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
 
         // treasure chest game rando
         if (Randomizer_GetSettingValue(RSK_SHUFFLE_CHEST_MINIGAME)) {
-            if (gSaveContext.n64ddFlag && play->sceneNum == 16 && (this->dyna.actor.params & 0x60) != 0x20) {
+            if (IS_RANDO && play->sceneNum == SCENE_TREASURE_BOX_SHOP && (this->dyna.actor.params & 0x60) != 0x20) {
                 if((this->dyna.actor.params & 0xF) < 2) {
                     Flags_SetCollectible(play, 0x1B);
                 }
@@ -476,7 +477,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             
             // RANDOTODO treasure chest game rando
             if (Randomizer_GetSettingValue(RSK_SHUFFLE_CHEST_MINIGAME)) {
-                if (gSaveContext.n64ddFlag && play->sceneNum == 16 && (this->dyna.actor.params & 0x60) != 0x20) {
+                if (IS_RANDO && play->sceneNum == SCENE_TREASURE_BOX_SHOP && (this->dyna.actor.params & 0x60) != 0x20) {
                     if((this->dyna.actor.params & 0xF) < 2) {
                         if(Flags_GetCollectible(play, 0x1B)) {
                             sItem = blueRupee;
@@ -506,7 +507,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             }
             // Chests need to have a negative getItemId in order to not immediately give their item
             // when approaching.
-            if (gSaveContext.n64ddFlag) {
+            if (IS_RANDO) {
                 sItem.getItemId = 0 - sItem.getItemId;
                 sItem.getItemFrom = ITEM_FROM_CHEST;
                 GiveItemEntryFromActorWithFixedRange(&this->dyna.actor, play, sItem);
@@ -626,8 +627,8 @@ void EnBox_Update(Actor* thisx, PlayState* play) {
             Actor_SetFocus(&this->dyna.actor, 40.0f);
     }
 
-    if (((!gSaveContext.n64ddFlag && ((this->dyna.actor.params >> 5 & 0x7F) == 0x7C)) ||
-        (gSaveContext.n64ddFlag && ABS(sItem.getItemId) == RG_ICE_TRAP)) &&
+    if (((!IS_RANDO && ((this->dyna.actor.params >> 5 & 0x7F) == 0x7C)) ||
+        (IS_RANDO && ABS(sItem.getItemId) == RG_ICE_TRAP)) &&
         this->actionFunc == EnBox_Open && this->skelanime.curFrame > 45 && this->iceSmokeTimer < 100) {
         if (!CVarGetInteger("gAddTraps.enabled", 0)) {
             EnBox_SpawnIceSmoke(this, play);
@@ -690,7 +691,7 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
     }
 
     // Change texture
-    if (!isVanilla && (csmc == CSMC_BOTH || csmc == CSMC_TEXTURE)) {
+    if (!isVanilla && hasCreatedRandoChestTextures && !hasCustomChestDLs && (csmc == CSMC_BOTH || csmc == CSMC_TEXTURE)) {
         switch (getItemCategory) {
             case ITEM_CATEGORY_MAJOR:
                 this->boxBodyDL = gGoldTreasureChestChestFrontDL;
@@ -725,7 +726,7 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
         }
     }
 
-    if (CVarGetInteger("gLetItSnow", 0) && hasChristmasChestTexturesAvailable) {
+    if (CVarGetInteger("gLetItSnow", 0) && hasChristmasChestTexturesAvailable && hasCreatedRandoChestTextures && !hasCustomChestDLs) {
         if (this->dyna.actor.scale.x == 0.01f) {
             this->boxBodyDL = gChristmasRedTreasureChestChestFrontDL;
             this->boxLidDL = gChristmasRedTreasureChestChestSideAndLidDL;
@@ -767,7 +768,18 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
 }
 
 void EnBox_CreateExtraChestTextures() {
+    // Don't patch textures for custom chest models, as they do not import textures the exact same way as vanilla chests
+    // OTRTODO: Make it so model packs can provide a unique DL per chest type, instead of us copying the brown chest and attempting to patch
+    if (ResourceMgr_FileIsCustomByName(gTreasureChestChestFrontDL) ||
+        ResourceMgr_FileIsCustomByName(gTreasureChestChestSideAndLidDL)) {
+        hasCustomChestDLs = 1;
+        return;
+    }
+
+    hasCustomChestDLs = 0;
+
     if (hasCreatedRandoChestTextures) return;
+
     Gfx gTreasureChestChestTextures[] = {
         gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gSkullTreasureChestFrontTex),
         gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gSkullTreasureChestSideAndTopTex),

@@ -1090,8 +1090,8 @@ s32 Health_ChangeBy(PlayState* play, s16 healthChange);
 void Rupees_ChangeBy(s16 rupeeChange);
 void Inventory_ChangeAmmo(s16 item, s16 ammoChange);
 void Magic_Fill(PlayState* play);
-void func_800876C8(PlayState* play);
-s32 func_80087708(PlayState* play, s16 arg1, s16 arg2);
+void Magic_Reset(PlayState* play);
+s32 Magic_RequestChange(PlayState* play, s16 amount, s16 type);
 void func_80088AA0(s16 seconds);
 void func_80088AF0(PlayState* play);
 void func_80088B34(s16 arg0);
@@ -1250,13 +1250,15 @@ s32 Object_IsLoaded(ObjectContext* objectCtx, s32 bankIndex);
 void func_800981B8(ObjectContext* objectCtx);
 s32 Scene_ExecuteCommands(PlayState* play, SceneCmd* sceneCmd);
 void TransitionActor_InitContext(GameState* state, TransitionActorContext* transiActorCtx);
-void func_800994A0(PlayState* play);
+void Scene_SetTransitionForNextEntrance(PlayState* play);
 void Scene_Draw(PlayState* play);
 void SkelAnime_DrawLod(PlayState* play, void** skeleton, Vec3s* jointTable,
                        OverrideLimbDrawOpa overrideLimbDraw, PostLimbDrawOpa postLimbDraw, void* arg, s32 dListIndex);
 void SkelAnime_DrawFlexLod(PlayState* play, void** skeleton, Vec3s* jointTable, s32 dListCount,
                            OverrideLimbDrawOpa overrideLimbDraw, PostLimbDrawOpa postLimbDraw, void* arg,
                            s32 dListIndex);
+void SkelAnime_DrawSkeletonOpa(PlayState* play, SkelAnime* skelAnime, OverrideLimbDrawOpa overrideLimbDraw,
+                               PostLimbDrawOpa postLimbDraw, void* arg);
 void SkelAnime_DrawOpa(PlayState* play, void** skeleton, Vec3s* jointTable,
                        OverrideLimbDrawOpa overrideLimbDraw, PostLimbDrawOpa postLimbDraw, void* arg);
 void SkelAnime_DrawFlexOpa(PlayState* play, void** skeleton, Vec3s* jointTable, s32 dListCount,
@@ -1535,7 +1537,7 @@ void KaleidoScopeCall_Draw(PlayState* play);
 void func_800BC490(PlayState* play, s16 point);
 s32 func_800BC56C(PlayState* play, s16 arg1);
 void func_800BC590(PlayState* play);
-void func_800BC5E0(PlayState* play, s32 arg1);
+void Gameplay_SetupTransition(PlayState* play, s32 arg1);
 Gfx* Play_SetFog(PlayState* play, Gfx* gfx);
 void Play_Destroy(GameState* thisx);
 void Play_Init(GameState* thisx);
@@ -2447,12 +2449,17 @@ void Heaps_Free(void);
 
 CollisionHeader* BgCheck_GetCollisionHeader(CollisionContext* colCtx, s32 bgId);
 
-void Interface_CreateQuadVertexGroup(Vtx* vtxList, s32 xStart, s32 yStart, s32 width, s32 height, u8 flippedH);
-
 // Exposing these methods to leverage them from the file select screen to render messages
 void Message_OpenText(PlayState* play, u16 textId);
 void Message_Decode(PlayState* play);
 void Message_DrawText(PlayState* play, Gfx** gfxP);
+
+// #region SOH [General]
+
+void Interface_CreateQuadVertexGroup(Vtx* vtxList, s32 xStart, s32 yStart, s32 width, s32 height, u8 flippedH);
+void Interface_RandoRestoreSwordless(void);
+
+// #endregion
 
 #ifdef __cplusplus
 #undef this

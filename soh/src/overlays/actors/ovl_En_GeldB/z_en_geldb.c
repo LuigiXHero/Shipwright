@@ -1568,19 +1568,19 @@ void EnGeldB_Draw(Actor* thisx, PlayState* play) {
             this->timer--;
             if (this->timer == 0) {
                 if ((INV_CONTENT(ITEM_HOOKSHOT) == ITEM_NONE) || (INV_CONTENT(ITEM_LONGSHOT) == ITEM_NONE)) {
-                    play->nextEntranceIndex = 0x1A5;
+                    play->nextEntranceIndex = ENTR_GERUDO_VALLEY_1;
                 } else if (Flags_GetEventChkInf(EVENTCHKINF_WATCHED_GANONS_CASTLE_COLLAPSE_CAUGHT_BY_GERUDO)) {
-                    play->nextEntranceIndex = 0x5F8;
+                    play->nextEntranceIndex = ENTR_GERUDOS_FORTRESS_18;
                 } else {
-                    play->nextEntranceIndex = 0x3B4;
+                    play->nextEntranceIndex = ENTR_GERUDOS_FORTRESS_17;
                 }
 
-                if (gSaveContext.n64ddFlag) {
+                if (IS_RANDO) {
                     Entrance_OverrideGeurdoGuardCapture();
                 }
 
-                play->fadeTransition = 0x26;
-                play->sceneLoadFlag = 0x14;
+                play->transitionType = TRANS_TYPE_CIRCLE(TCA_STARBURST, TCC_BLACK, TCS_FAST);
+                play->transitionTrigger = TRANS_TRIGGER_START;
             }
         }
     }
@@ -1588,8 +1588,7 @@ void EnGeldB_Draw(Actor* thisx, PlayState* play) {
     if ((this->action != GELDB_WAIT) || !this->invisible) {
         Gfx_SetupDL_25Opa(play->state.gfxCtx);
         gSPSegment(POLY_OPA_DISP++, 0x08, SEGMENTED_TO_VIRTUAL(eyeTextures[this->blinkState]));
-        SkelAnime_DrawFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable,
-                              this->skelAnime.dListCount, EnGeldB_OverrideLimbDraw, EnGeldB_PostLimbDraw, this);
+        SkelAnime_DrawSkeletonOpa(play, &this->skelAnime, EnGeldB_OverrideLimbDraw, EnGeldB_PostLimbDraw, this);
         if (this->action == GELDB_BLOCK) {
             s32 i;
             Vec3f blockTrisVtx0[3];
