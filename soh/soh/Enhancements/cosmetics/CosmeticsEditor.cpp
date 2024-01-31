@@ -46,6 +46,7 @@ extern PlayState* gPlayState;
 #include "overlays/ovl_Boss_Ganon2/ovl_Boss_Ganon2.h"
 #include "objects/object_gjyo_objects/object_gjyo_objects.h"
 #include "textures/nintendo_rogo_static/nintendo_rogo_static.h"
+#include "objects/object_gi_rabit_mask/object_gi_rabit_mask.h"
 void ResourceMgr_PatchGfxByName(const char* path, const char* patchName, int index, Gfx instruction);
 void ResourceMgr_PatchGfxCopyCommandByName(const char* path, const char* patchName, int destinationIndex, int sourceIndex);
 void ResourceMgr_UnpatchGfxByName(const char* path, const char* patchName);
@@ -228,6 +229,7 @@ static std::map<std::string, CosmeticOption> cosmeticOptions = {
     COSMETIC_OPTION("Equipment_BowHandle",           "Bow Handle",           GROUP_EQUIPMENT,    ImVec4( 50, 150, 255, 255), false, true, true),
     COSMETIC_OPTION("Equipment_ChuFace",             "Bombchu Face",         GROUP_EQUIPMENT,    ImVec4(  0, 100, 150, 255), false, true, true),
     COSMETIC_OPTION("Equipment_ChuBody",             "Bombchu Body",         GROUP_EQUIPMENT,    ImVec4(180, 130,  50, 255), false, true, true), 
+    COSMETIC_OPTION("Equipment_BunnyHood",           "Bunny Hood",           GROUP_EQUIPMENT,    ImVec4(255, 235,  109, 255), false, true, true), 
 
     COSMETIC_OPTION("Consumable_Hearts",             "Hearts",               GROUP_CONSUMABLE,   ImVec4(255,  70,  50, 255), false, true, false),
     COSMETIC_OPTION("Consumable_HeartBorder",        "Heart Border",         GROUP_CONSUMABLE,   ImVec4( 50,  40,  60, 255), false, true, true),
@@ -659,8 +661,8 @@ void ApplyOrResetCustomGfxPatches(bool manualChange) {
         PATCH_GFX(gLinkAdultLeftHandHoldingMasterSwordNearDL,     "Swords_MasterBlade2",      swordsMasterBlade.changedCvar,       17, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
         PATCH_GFX(object_toki_objects_DL_001BD0,                  "Swords_MasterBlade3",      swordsMasterBlade.changedCvar,       13, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
         PATCH_GFX(object_toki_objects_DL_001BD0,                  "Swords_MasterBlade4",      swordsMasterBlade.changedCvar,       14, gsDPSetEnvColor(color.r / 2, color.g / 2, color.b / 2, 255));
-        PATCH_GFX(ovl_Boss_Ganon2_DL_0103A8,                      "Swords_MasterBlade5",      swordsMasterBlade.changedCvar,       13, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
-        PATCH_GFX(ovl_Boss_Ganon2_DL_0103A8,                      "Swords_MasterBlade6",      swordsMasterBlade.changedCvar,       14, gsDPSetEnvColor(color.r / 2, color.g / 2, color.b / 2, 255));
+        PATCH_GFX(gGanonMasterSwordDL,                            "Swords_MasterBlade5",      swordsMasterBlade.changedCvar,       13, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
+        PATCH_GFX(gGanonMasterSwordDL,                            "Swords_MasterBlade6",      swordsMasterBlade.changedCvar,       14, gsDPSetEnvColor(color.r / 2, color.g / 2, color.b / 2, 255));
     }
     // static CosmeticOption& swordsMasterHilt = cosmeticOptions.at("Swords_MasterHilt");
     // if (manualChange || CVarGetInteger(swordsMasterHilt.rainbowCvar, 0)) {
@@ -675,7 +677,7 @@ void ApplyOrResetCustomGfxPatches(bool manualChange) {
     //     PATCH_GFX(gLinkAdultMirrorShieldSwordAndSheathFarDL,      "Swords_MasterHilt7",       swordsMasterHilt.changedCvar,         4, gsDPSetGrayscaleColor(color.r, color.g, color.b, 255));
     //     PATCH_GFX(gLinkAdultHylianShieldSwordAndSheathNearDL,     "Swords_MasterHilt8",       swordsMasterHilt.changedCvar,         4, gsDPSetGrayscaleColor(color.r, color.g, color.b, 255));
     //     PATCH_GFX(gLinkAdultHylianShieldSwordAndSheathFarDL,      "Swords_MasterHilt9",       swordsMasterHilt.changedCvar,         4, gsDPSetGrayscaleColor(color.r, color.g, color.b, 255));
-    //     PATCH_GFX(ovl_Boss_Ganon2_DL_0103A8,                      "Swords_MasterHilt10",      swordsMasterHilt.changedCvar,        16, gsDPSetGrayscaleColor(color.r, color.g, color.b, 255));
+    //     PATCH_GFX(gGanonMasterSwordDL,                            "Swords_MasterHilt10",      swordsMasterHilt.changedCvar,        16, gsDPSetGrayscaleColor(color.r, color.g, color.b, 255));
 
     //     if (manualChange) {
     //     PATCH_GFX(gLinkAdultMasterSwordAndSheathFarDL,            "Swords_MasterHilt11",      swordsMasterHilt.changedCvar,        38, gsSPGrayscale(true));
@@ -704,9 +706,9 @@ void ApplyOrResetCustomGfxPatches(bool manualChange) {
     //     PATCH_GFX(object_toki_objects_DL_001BD0,                  "Swords_MasterHilt34",      swordsMasterHilt.changedCvar,       112, gsSPGrayscale(true));
     //     PATCH_GFX(object_toki_objects_DL_001BD0,                  "Swords_MasterHilt35",      swordsMasterHilt.changedCvar,       278, gsSPGrayscale(false));
     //     PATCH_GFX(object_toki_objects_DL_001BD0,                  "Swords_MasterHilt36",      swordsMasterHilt.changedCvar,       280, gsSPEndDisplayList());
-    //     PATCH_GFX(ovl_Boss_Ganon2_DL_0103A8,                      "Swords_MasterHilt37",      swordsMasterHilt.changedCvar,       112, gsSPGrayscale(true));
-    //     PATCH_GFX(ovl_Boss_Ganon2_DL_0103A8,                      "Swords_MasterHilt38",      swordsMasterHilt.changedCvar,       278, gsSPGrayscale(false));
-    //     PATCH_GFX(ovl_Boss_Ganon2_DL_0103A8,                      "Swords_MasterHilt39",      swordsMasterHilt.changedCvar,       280, gsSPEndDisplayList());
+    //     PATCH_GFX(gGanonMasterSwordDL,                            "Swords_MasterHilt37",      swordsMasterHilt.changedCvar,       112, gsSPGrayscale(true));
+    //     PATCH_GFX(gGanonMasterSwordDL,                            "Swords_MasterHilt38",      swordsMasterHilt.changedCvar,       278, gsSPGrayscale(false));
+    //     PATCH_GFX(gGanonMasterSwordDL,                            "Swords_MasterHilt39",      swordsMasterHilt.changedCvar,       280, gsSPEndDisplayList());
     //     }
     // }
     static CosmeticOption& swordsBiggoronBlade = cosmeticOptions.at("Swords_BiggoronBlade");
@@ -914,6 +916,26 @@ void ApplyOrResetCustomGfxPatches(bool manualChange) {
         PATCH_GFX(gGiBombchuDL,                                   "Equipment_ChuBody3",       equipmentChuBody.changedCvar,        60, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
         PATCH_GFX(gGiBombchuDL,                                   "Equipment_ChuBody4",       equipmentChuBody.changedCvar,        61, gsDPSetEnvColor(color.r / 3, color.g / 3, color.b / 3, 255));
         PATCH_GFX(gBombchuDL,                                     "Equipment_ChuBody5",       equipmentChuBody.changedCvar,        46, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
+    }
+
+    static CosmeticOption& equipmentBunnyHood = cosmeticOptions.at("Equipment_BunnyHood");
+    if (manualChange || CVarGetInteger(equipmentBunnyHood.rainbowCvar, 0)) {
+        static Color_RGBA8 defaultColor = {equipmentBunnyHood.defaultColor.x, equipmentBunnyHood.defaultColor.y, equipmentBunnyHood.defaultColor.z, equipmentBunnyHood.defaultColor.w};
+        Color_RGBA8 color = CVarGetColor(equipmentBunnyHood.cvar, defaultColor);
+        PATCH_GFX(gGiBunnyHoodDL,                                   "Equipment_BunnyHood1",       equipmentBunnyHood.changedCvar,        5, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
+        PATCH_GFX(gGiBunnyHoodDL,                                   "Equipment_BunnyHood2",       equipmentBunnyHood.changedCvar,        6, gsDPSetEnvColor(color.r / 3, color.g / 3, color.b / 3, 255));
+        PATCH_GFX(gGiBunnyHoodDL,                                   "Equipment_BunnyHood3",       equipmentBunnyHood.changedCvar,        83, gsDPSetPrimColor(0, 0, color.r, color.g, color.b, 255));
+        PATCH_GFX(gGiBunnyHoodDL,                                   "Equipment_BunnyHood4",       equipmentBunnyHood.changedCvar,        84, gsDPSetEnvColor(color.r / 3, color.g / 3, color.b / 3, 255));
+        PATCH_GFX(gLinkChildBunnyHoodDL,                            "Equipment_BunnyHood5",       equipmentBunnyHood.changedCvar,         4, gsDPSetGrayscaleColor(color.r, color.g, color.b, 255));
+
+        if (manualChange) {
+        PATCH_GFX(gLinkChildBunnyHoodDL,                            "Equipment_BunnyHood6",       equipmentBunnyHood.changedCvar,        13, gsSPGrayscale(true));
+            if (CVarGetInteger(equipmentBunnyHood.changedCvar, 0)) {
+                ResourceMgr_PatchGfxByName(gLinkChildBunnyHoodDL,   "Equipment_BunnyHood7",                                             125, gsSPBranchListOTRFilePath(gEndGrayscaleAndEndDlistDL));
+            } else {
+                ResourceMgr_UnpatchGfxByName(gLinkChildBunnyHoodDL, "Equipment_BunnyHood7");
+            }
+        }
     }
 
     static CosmeticOption& consumableGreenRupee = cosmeticOptions.at("Consumable_GreenRupee");
@@ -1463,12 +1485,13 @@ void Draw_Placements(){
 }
 
 void DrawSillyTab() {
+    ImGui::BeginDisabled(CVarGetInteger("gDisableChangingSettings", 0));
     if (CVarGetInteger("gLetItSnow", 0)) {
         if (UIWidgets::EnhancementCheckbox("Let It Snow", "gLetItSnow")) {
             LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
         }
     }
-    if (UIWidgets::EnhancementSliderFloat("Link Body Scale: %f", "##Link_BodyScale", "gCosmetics.Link_BodyScale.Value", 0.001f, 0.025f, "", 0.01f, true)) {
+    if (UIWidgets::EnhancementSliderFloat("Link Body Scale: %.3fx", "##Link_BodyScale", "gCosmetics.Link_BodyScale.Value", 0.001f, 0.025f, "", 0.01f, true)) {
         CVarSetInteger("gCosmetics.Link_BodyScale.Changed", 1);
     }
     ImGui::SameLine();
@@ -1483,7 +1506,7 @@ void DrawSillyTab() {
             player->actor.scale.z = 0.01f;
         }
     }
-    if (UIWidgets::EnhancementSliderFloat("Link Head Scale: %f", "##Link_HeadScale", "gCosmetics.Link_HeadScale.Value", 0.4f, 4.0f, "", 1.0f, false)) {
+    if (UIWidgets::EnhancementSliderFloat("Link Head Scale: %.2fx", "##Link_HeadScale", "gCosmetics.Link_HeadScale.Value", 0.4f, 4.0f, "", 1.0f, false)) {
         CVarSetInteger("gCosmetics.Link_HeadScale.Changed", 1);
     }
     ImGui::SameLine();
@@ -1492,7 +1515,7 @@ void DrawSillyTab() {
         CVarClear("gCosmetics.Link_HeadScale.Changed");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    if (UIWidgets::EnhancementSliderFloat("Link Sword Scale: %f", "##Link_SwordScale", "gCosmetics.Link_SwordScale.Value", 1.0f, 2.5f, "", 1.0f, false)) {
+    if (UIWidgets::EnhancementSliderFloat("Link Sword Scale: %.3fx", "##Link_SwordScale", "gCosmetics.Link_SwordScale.Value", 1.0f, 2.5f, "", 1.0f, false)) {
         CVarSetInteger("gCosmetics.Link_SwordScale.Changed", 1);
     }
     ImGui::SameLine();
@@ -1501,44 +1524,44 @@ void DrawSillyTab() {
         CVarClear("gCosmetics.Link_SwordScale.Changed");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    UIWidgets::EnhancementSliderFloat("Bunny Hood Length: %f", "##BunnyHood_EarLength", "gCosmetics.BunnyHood_EarLength", -300.0f, 1000.0f, "", 0.0f, false);
+    UIWidgets::EnhancementSliderFloat("Bunny Hood Length: %.0f", "##BunnyHood_EarLength", "gCosmetics.BunnyHood_EarLength", -300.0f, 1000.0f, "", 0.0f, false);
     ImGui::SameLine();
     if (ImGui::Button("Reset##BunnyHood_EarLength")) {
         CVarClear("gCosmetics.BunnyHood_EarLength");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    UIWidgets::EnhancementSliderFloat("Bunny Hood Spread: %f", "##BunnyHood_EarSpread", "gCosmetics.BunnyHood_EarSpread", -300.0f, 500.0f, "", 0.0f, false);
+    UIWidgets::EnhancementSliderFloat("Bunny Hood Spread: %.0f", "##BunnyHood_EarSpread", "gCosmetics.BunnyHood_EarSpread", -300.0f, 500.0f, "", 0.0f, false);
     ImGui::SameLine();
     if (ImGui::Button("Reset##BunnyHood_EarSpread")) {
         CVarClear("gCosmetics.BunnyHood_EarSpread");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    UIWidgets::EnhancementSliderFloat("Goron Neck Length: %f", "##Goron_NeckLength", "gCosmetics.Goron_NeckLength", 0.0f, 1000.0f, "", 0.0f, false);
+    UIWidgets::EnhancementSliderFloat("Goron Neck Length: %.0f", "##Goron_NeckLength", "gCosmetics.Goron_NeckLength", 0.0f, 5000.0f, "", 0.0f, false);
     ImGui::SameLine();
     if (ImGui::Button("Reset##Goron_NeckLength")) {
         CVarClear("gCosmetics.Goron_NeckLength");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
     UIWidgets::EnhancementCheckbox("Unfix Goron Spin", "gUnfixGoronSpin");
-    UIWidgets::EnhancementSliderFloat("Fairies Size: %f", "##Fairies_Size", "gCosmetics.Fairies_Size", 0.25f, 5.0f, "", 1.0f, false);
+    UIWidgets::EnhancementSliderFloat("Fairies Size: %.2fx", "##Fairies_Size", "gCosmetics.Fairies_Size", 0.25f, 5.0f, "", 1.0f, false);
     ImGui::SameLine();
     if (ImGui::Button("Reset##Fairies_Size")) {
         CVarClear("gCosmetics.Fairies_Size");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    UIWidgets::EnhancementSliderFloat("N64 Logo Spin Speed: %f", "##N64Logo_SpinSpeed", "gCosmetics.N64Logo_SpinSpeed", 0.25f, 5.0f, "", 1.0f, false);
+    UIWidgets::EnhancementSliderFloat("N64 Logo Spin Speed: %.2fx", "##N64Logo_SpinSpeed", "gCosmetics.N64Logo_SpinSpeed", 0.25f, 5.0f, "", 1.0f, false);
     ImGui::SameLine();
     if (ImGui::Button("Reset##N64Logo_SpinSpeed")) {
         CVarClear("gCosmetics.N64Logo_SpinSpeed");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    UIWidgets::EnhancementSliderFloat("Moon Size: %f", "##Moon_Size", "gCosmetics.Moon_Size", 0.5f, 2.0f, "", 1.0f, false);
+    UIWidgets::EnhancementSliderFloat("Moon Size: %.1f %%", "##Moon_Size", "gCosmetics.Moon_Size", 0.5f, 2.0f, "", 1.0f, true);
     ImGui::SameLine();
     if (ImGui::Button("Reset##Moon_Size")) {
         CVarClear("gCosmetics.Moon_Size");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
-    if (UIWidgets::EnhancementSliderFloat("Kak Windmill Speed: %f", "##Kak_Windmill_Speed", "gCosmetics.Kak_Windmill_Speed.Value", 100.0f, 6000.0f, "", 100.0f, false)) {
+    if (UIWidgets::EnhancementSliderFloat("Kak Windmill Speed: %.0f", "##Kak_Windmill_Speed", "gCosmetics.Kak_Windmill_Speed.Value", 100.0f, 6000.0f, "", 100.0f, false)) {
         CVarSetInteger("gCosmetics.Kak_Windmill_Speed.Changed", 1);
     }
     ImGui::SameLine();
@@ -1547,6 +1570,7 @@ void DrawSillyTab() {
         CVarClear("gCosmetics.Kak_Windmill_Speed.Changed");
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
+    ImGui::EndDisabled();
 }
 
 // Copies the RGB values from one cosmetic option to another, multiplied by the passed in amount, this
@@ -1666,7 +1690,7 @@ void DrawCosmeticRow(CosmeticOption& cosmeticOption) {
         LUS::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesOnNextTick();
     }
     ImGui::SameLine();
-    ImGui::Text(cosmeticOption.label.c_str());
+    ImGui::Text("%s", cosmeticOption.label.c_str());
     ImGui::SameLine((ImGui::CalcTextSize("Mirror Shield Mirror").x * 1.0f) + 60.0f);
     if (ImGui::Button(("Random##" + cosmeticOption.label).c_str())) {
         RandomizeColor(cosmeticOption);
@@ -1701,7 +1725,7 @@ void DrawCosmeticRow(CosmeticOption& cosmeticOption) {
 
 void DrawCosmeticGroup(CosmeticGroup cosmeticGroup) {
     std::string label = groupLabels.at(cosmeticGroup);
-    ImGui::Text(label.c_str());
+    ImGui::Text("%s", label.c_str());
     ImGui::SameLine((ImGui::CalcTextSize("Mirror Shield Mirror").x * 1.0f) + 60.0f);
     if (ImGui::Button(("Random##" + label).c_str())) {
         for (auto& [id, cosmeticOption] : cosmeticOptions) {
@@ -1745,6 +1769,10 @@ void CosmeticsEditorWindow::DrawElement() {
     ImGui::SameLine();
     UIWidgets::EnhancementCombobox("gCosmetics.DefaultColorScheme", colorSchemes, COLORSCHEME_N64);
     UIWidgets::EnhancementCheckbox("Advanced Mode", "gCosmetics.AdvancedMode");
+    UIWidgets::InsertHelpHoverText(
+        "Some cosmetic options may not apply if you have any mods that provide custom models for the cosmetic option.\n\n"
+        "For example, if you have custom Link model, then the Link's Hair color option will most likely not apply."
+    );
     if (CVarGetInteger("gCosmetics.AdvancedMode", 0)) {
         if (ImGui::Button("Lock All Advanced", ImVec2(ImGui::GetContentRegionAvail().x / 2, 30.0f))) {
             for (auto& [id, cosmeticOption] : cosmeticOptions) {
@@ -1765,7 +1793,7 @@ void CosmeticsEditorWindow::DrawElement() {
         }
     }
     UIWidgets::EnhancementCheckbox("Sync Rainbow colors", "gCosmetics.RainbowSync");
-    UIWidgets::EnhancementSliderFloat("Rainbow Speed: %f", "##rainbowSpeed", "gCosmetics.RainbowSpeed", 0.03f, 1.0f, "", 0.6f, false);
+    UIWidgets::EnhancementSliderFloat("Rainbow Speed: %.3f", "##rainbowSpeed", "gCosmetics.RainbowSpeed", 0.03f, 1.0f, "", 0.6f, false, true);
     if (ImGui::Button("Randomize All", ImVec2(ImGui::GetContentRegionAvail().x / 2, 30.0f))) {
         for (auto& [id, cosmeticOption] : cosmeticOptions) {
             if (!CVarGetInteger(cosmeticOption.lockedCvar, 0) && (!cosmeticOption.advancedOption || CVarGetInteger("gCosmetics.AdvancedMode", 0))) {
