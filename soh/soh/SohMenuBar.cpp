@@ -1005,8 +1005,8 @@ void DrawEnhancementsMenu() {
 
             UIWidgets::EnhancementCheckbox("Visual Stone of Agony", "gVisualAgony");
             UIWidgets::Tooltip("Displays an icon and plays a sound when Stone of Agony should be activated, for those without rumble");
-            UIWidgets::PaddedEnhancementCheckbox("Assignable Tunics and Boots", "gAssignableTunicsAndBoots", true, false);
-            UIWidgets::Tooltip("Allows equipping the tunic and boots to c-buttons");
+            UIWidgets::PaddedEnhancementCheckbox("Assignable Swords, Tunics and Boots", "gAssignableTunicsAndBoots", true, false);
+            UIWidgets::Tooltip("Allows equipping the swords, tunics and boots to c-buttons");
             UIWidgets::PaddedEnhancementCheckbox("Equipment Toggle", "gEquipmentCanBeRemoved", true, false);
             UIWidgets::Tooltip("Allows equipment to be removed by toggling it off on\nthe equipment subscreen.");
             if (CVarGetInteger("gEquipmentCanBeRemoved", 0)) {

@@ -140,12 +140,15 @@ typedef enum {
     /* 0x15 */ SLOT_BOTTLE_4,
     /* 0x16 */ SLOT_TRADE_ADULT,
     /* 0x17 */ SLOT_TRADE_CHILD,
-    /* 0x18 */ SLOT_TUNIC_KOKIRI,
-    /* 0x19 */ SLOT_TUNIC_GORON,
-    /* 0x1A */ SLOT_TUNIC_ZORA,
-    /* 0x1B */ SLOT_BOOTS_KOKIRI,
-    /* 0x1C */ SLOT_BOOTS_IRON,
-    /* 0x1D */ SLOT_BOOTS_HOVER,
+    /* 0x18 */ SLOT_SWORD_KOKIRI,
+    /* 0x19 */ SLOT_SWORD_MASTER,
+    /* 0x1A */ SLOT_SWORD_KNIFE,
+    /* 0x1B */ SLOT_TUNIC_KOKIRI,
+    /* 0x1C */ SLOT_TUNIC_GORON,
+    /* 0x1D */ SLOT_TUNIC_ZORA,
+    /* 0x1E */ SLOT_BOOTS_KOKIRI,
+    /* 0x1F */ SLOT_BOOTS_IRON,
+    /* 0x20 */ SLOT_BOOTS_HOVER,
     /* 0xFF */ SLOT_NONE = 0xFF
 } InventorySlot;
 

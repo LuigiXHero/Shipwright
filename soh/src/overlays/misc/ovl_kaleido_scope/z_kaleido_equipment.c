@@ -642,10 +642,28 @@ void KaleidoScope_DrawEquipment(PlayState* play) {
                     sEquipTimer = 10;
                 } else if (CVarGetInteger("gAssignableTunicsAndBoots", 0) != 0) {
                     // Only allow assigning tunic and boots to c-buttons
-                    if (pauseCtx->cursorY[PAUSE_EQUIP] > 1) {
+                    if (pauseCtx->cursorY[PAUSE_EQUIP] >= 0 && pauseCtx->cursorY[PAUSE_EQUIP] != 1) {
                         if (CHECK_OWNED_EQUIP(pauseCtx->cursorY[PAUSE_EQUIP], pauseCtx->cursorX[PAUSE_EQUIP] - 1)) {
                             u16 slot = 0;
                             switch (cursorItem) {
+                                case ITEM_SWORD_KOKIRI:
+                                    slot = SLOT_SWORD_KOKIRI;
+                                    break;
+                                case ITEM_SWORD_MASTER:
+                                    slot = SLOT_SWORD_MASTER;
+                                    break;
+                                case ITEM_HEART_PIECE_2:
+                                    slot = SLOT_SWORD_KNIFE;
+                                    break;
+                                case ITEM_SWORD_KNIFE:
+                                    slot = SLOT_SWORD_KNIFE;
+                                    break;
+                                case ITEM_SWORD_BROKEN:
+                                    slot = SLOT_SWORD_KNIFE;
+                                    break;
+                                case ITEM_SWORD_BGS:
+                                    slot = SLOT_SWORD_KNIFE;
+                                    break;
                                 case ITEM_TUNIC_KOKIRI:
                                     slot = SLOT_TUNIC_KOKIRI;
                                     break;

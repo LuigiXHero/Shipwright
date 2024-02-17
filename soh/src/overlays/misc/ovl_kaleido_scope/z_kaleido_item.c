@@ -843,6 +843,13 @@ void KaleidoScope_SetupItemEquip(PlayState* play, u16 item, u16 slot, s16 animX,
             sEquipMoveTimer = 6;
         }
     } else {
+        if ((pauseCtx->equipTargetItem == ITEM_HEART_PIECE_2)) {
+            pauseCtx->equipTargetItem = ITEM_SWORD_BGS;
+        }
+        if ((pauseCtx->equipTargetItem == ITEM_SWORD_BGS) && (gSaveContext.bgsFlag == 0) &&
+            CHECK_OWNED_EQUIP_ALT(EQUIP_TYPE_SWORD, EQUIP_INV_SWORD_BROKENGIANTKNIFE)) {
+            pauseCtx->equipTargetItem = ITEM_SWORD_KNIFE;
+        }
         Audio_PlaySoundGeneral(NA_SE_SY_DECIDE, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
     }
 }
