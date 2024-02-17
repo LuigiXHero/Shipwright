@@ -9127,13 +9127,15 @@ void func_80844AF4(Player* this, PlayState* play) {
         }
     }
 }
-
+// LXH: Allow equips buttons for spin attack
 s32 func_80844BE4(Player* this, PlayState* play) {
     s32 temp;
-
-    u16 buttonsToCheck = BTN_A | BTN_B | BTN_CLEFT | BTN_CRIGHT | BTN_CDOWN;
-    if (CVarGetInteger("gDpadEquips", 0) != 0) {
-        buttonsToCheck |= BTN_DUP | BTN_DDOWN | BTN_DLEFT | BTN_DRIGHT;
+    u16 buttonsToCheck = BTN_B;
+    if (CVarGetInteger("gAssignableTunicsAndBoots", 0) == 1) {
+        buttonsToCheck |= BTN_CLEFT | BTN_CRIGHT | BTN_CDOWN;
+        if (CVarGetInteger("gDpadEquips", 0) != 0) {
+            buttonsToCheck |= BTN_DUP | BTN_DDOWN | BTN_DLEFT | BTN_DRIGHT;
+        }
     }
 
     if (Player_StartCsAction(play, this)) {
