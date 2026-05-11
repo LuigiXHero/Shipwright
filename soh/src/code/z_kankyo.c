@@ -2025,10 +2025,10 @@ void Environment_PlaySceneSequence(PlayState* play) {
         if (((void)0, gSaveContext.seqId) != play->sequenceCtx.seqId) {
             func_800F5550(play->sequenceCtx.seqId);
         }
-    } else if (((void)0, gSaveContext.dayTime) > 0x4AAA && ((void)0, gSaveContext.dayTime) < 0xB71D) {
+    } //else if (((void)0, gSaveContext.dayTime) > 0x4AAA && ((void)0, gSaveContext.dayTime) < 0xB71D) {
         if (((void)0, gSaveContext.seqId) != play->sequenceCtx.seqId) {
             func_800F5550(play->sequenceCtx.seqId);
-        }
+        //}
 
         play->envCtx.unk_E0 = 1;
     } else {
@@ -2075,6 +2075,7 @@ void func_80075B44(PlayState* play) {
             }
             break;
         case 2:
+            Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0xF000FF);
             if (gSaveContext.dayTime > 0xC000) {
                 func_800788CC(NA_SE_EV_DOG_CRY_EVENING);
                 play->envCtx.unk_E0++;
@@ -2082,8 +2083,9 @@ void func_80075B44(PlayState* play) {
             break;
         case 3:
             if (play->envCtx.unk_EE[0] == 0 && play->envCtx.unk_F2[0] == 0) {
-                Audio_PlayNatureAmbienceSequence(play->sequenceCtx.natureAmbienceId);
-                Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_0, CHANNEL_IO_PORT_1, 1);
+                Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0xF000FF);
+                //Audio_PlayNatureAmbienceSequence(play->sequenceCtx.natureAmbienceId);
+                //Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_0, CHANNEL_IO_PORT_1, 1);
             }
             play->envCtx.unk_E0++;
             break;
@@ -2093,10 +2095,12 @@ void func_80075B44(PlayState* play) {
             }
             break;
         case 5:
-            Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_0, CHANNEL_IO_PORT_1, 0);
+            Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0xF000FF);
+            //Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_0, CHANNEL_IO_PORT_1, 0);
             if (play->envCtx.unk_EE[0] == 0 && play->envCtx.unk_F2[0] == 0) {
-                Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_1 << 4 | NATURE_CHANNEL_CRITTER_3,
-                                                 CHANNEL_IO_PORT_1, 1);
+                //Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_1 << 4 | NATURE_CHANNEL_CRITTER_3,
+                //                                 CHANNEL_IO_PORT_1, 1);
+                Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0xF000FF);
             }
             play->envCtx.unk_E0++;
             break;
@@ -2115,8 +2119,9 @@ void func_80075B44(PlayState* play) {
             }
             break;
         case 7:
-            Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_1 << 4 | NATURE_CHANNEL_CRITTER_3,
-                                             CHANNEL_IO_PORT_1, 0);
+            //Audio_SetNatureAmbienceChannelIO(NATURE_CHANNEL_CRITTER_1 << 4 | NATURE_CHANNEL_CRITTER_3,
+            //                                 CHANNEL_IO_PORT_1, 0);
+            Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0xF000FF);
             if (play->envCtx.unk_EE[0] == 0 && play->envCtx.unk_F2[0] == 0) 
             {
                 // OTRTODO: This is where corrupt audio happens. Commenting this out seems to not introduce any side effects?
